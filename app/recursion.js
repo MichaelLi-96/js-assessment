@@ -1,3 +1,29 @@
+function listFilesHelper(data, dirName, files, reachedDir) {
+  if(dirName === undefined) {
+    for(let i = 0; i < data.files.length; i++) {
+      files.push(data.files[i]);
+    }
+    for(let i = 0; i < data.subDirs.length; i++) {
+      listFilesHelper(data.subDirs[i], dirName, files, false);
+    }
+  }
+  else {
+    if(data.dirName === dirName || reachedDir === true) {
+      for(let i = 0; i < data.files.length; i++) {
+        files.push(data.files[i]);
+      }
+      for(let i = 0; i < data.subDirs.length; i++) {
+        listFilesHelper(data.subDirs[i], dirName, files, true);
+      }
+    }
+    else {
+      for(let i = 0; i < data.subDirs.length; i++) {
+        listFilesHelper(data.subDirs[i], dirName, files, false);
+      }
+    }
+  }
+}
+
 recursionAnswers = {
   /**
    * List the files in a given directory, of a filesystem described by data.
@@ -17,7 +43,9 @@ recursionAnswers = {
    * @returns {Number[]} The files under the directory dirName, including subdiretories.
    */
   listFiles: function listFiles(data, dirName) {
-
+    const files = [];
+    listFilesHelper(data, dirName, files, false);
+    return files;
   },
 
   /**
@@ -30,6 +58,12 @@ recursionAnswers = {
    * @returns {Number} The nth fibonacci number
    */
   fibonacci: function fibonacci(n) {
-
-  },
+    if(n === 0) {
+      return 0;
+    }
+    if(n === 1 || n === 2) {
+      return 1;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2);
+    },
 };

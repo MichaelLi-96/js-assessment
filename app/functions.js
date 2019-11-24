@@ -10,7 +10,7 @@ functionsAnswers = {
    * @returns Whatever fn would return
    */
   argsAsArray: function argsAsArray(fn, arr) {
-
+    return fn.apply(this, arr);
   },
 
   /**
@@ -27,6 +27,8 @@ functionsAnswers = {
    * that begins with str + ', ' + that 1 argument.
    */
   functionFunction: function functionFunction(str) {
-
+    return function(arg) {
+      return str + ", " + arg;
+    };
   },
 };

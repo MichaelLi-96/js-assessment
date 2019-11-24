@@ -7,7 +7,10 @@ asyncAnswers = {
    * @returns {then: function} A promise like object containing a then property.
    */
   async: function async(value) {
-
+    const promise = new Promise(function(resolve, reject) {
+      resolve(value);
+    });
+    return promise;
   },
 
   /**
@@ -21,6 +24,33 @@ asyncAnswers = {
    * @returns {then: function} A promise like object containing a then property.
    */
   manipulateRemoteData: function manipulateRemoteData(url) {
+    const promise = new Promise(function(resolve, reject) {
+      const request = new XMLHttpRequest();
+      request.open("GET", url);
+      request.onload = () => {
+        if (request.status === 200) {
+          const people = JSON.parse(request.response).people;
+          const names = [];
+          for(let i = 0; i < people.length; i++) {
+            names.push(people[i].name);
+          }
+          resolve(names.sort());
+        } 
+        else {
+          reject(Error(request.statusText));
+        }
+      };
 
+      request.onerror = () => {
+        reject(Error('Error fetching data.'));
+      };
+      request.send();
+    });
+    // promise.then((result) => {
+    //   console.log(result);
+    // }).catch((error) => {
+    //   console.log(error);
+    // });
+    return promise;
   },
 };
